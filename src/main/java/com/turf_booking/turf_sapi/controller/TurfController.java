@@ -4,14 +4,18 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.turf_booking.turf_sapi.model.ApiResponse;
 import com.turf_booking.turf_sapi.model.Slot;
 import com.turf_booking.turf_sapi.model.Turf;
 import com.turf_booking.turf_sapi.service.TurfService;
@@ -29,40 +33,57 @@ public class TurfController {
 	}
 	
 	@GetMapping("turf/{turfId}")
-	public ResponseEntity<Turf> getTurfById (@PathVariable Integer turfId){
+	public ResponseEntity<ApiResponse<Turf>> getTurfById (@PathVariable Integer turfId){
 		
 		return turfService.getTurfById(turfId);
 		
 	}
 	
 	@GetMapping("turf/search-by")
-	public ResponseEntity<List<Turf>> getTurfsByParameter (@RequestParam String parameter, @RequestParam String value){
+	public ResponseEntity<ApiResponse<List<Turf>>> getTurfsByParameter (@RequestParam String parameter, @RequestParam String value){
 		
 		return turfService.getTurfsByParameter(parameter,value);
+	}
+	
+	@GetMapping("turf/all")
+	public ResponseEntity<ApiResponse<List<Turf>>> getAllTurf(){
+		
+		return turfService.getAllTurfs();
 	}
 
 	
 	@PostMapping("turf")
-	public ResponseEntity<String> addTurf (@RequestBody Turf turf){
+	public ResponseEntity<ApiResponse<String>> addTurf (@RequestBody Turf turf){
 		
-		return turfService.addTurf(turf);
+		return turfService.addTurf(turf);		
+	}
+	
+	@PatchMapping("turf/book/{turfId}")
+	public ResponseEntity<ApiResponse<String>> bookTurf (@PathVariable Integer turfId,@RequestParam List<Integer> slotIds){
 		
+		return turfService.bookTurf(turfId, slotIds);
+	}
+	
+	@DeleteMapping("turf/cancel/{turfId}")
+	public ResponseEntity<ApiResponse<String>> cancelTurf (@PathVariable Integer turfId,@RequestParam List<Integer> slotIds){
+		
+		return turfService.cancelTurf(turfId, slotIds);
 	}
 	
 	@GetMapping("slots")
-	public ResponseEntity<List<Slot>> getSlots (@RequestParam List<Integer> slots){
+	public ResponseEntity<ApiResponse<List<Slot>>> getSlots (@RequestParam List<Integer> slots){
 		
 		return turfService.getSlots(slots);
 	}
 	
 	@GetMapping("slots/all")
-	public ResponseEntity<List<Slot>> getAllSlots (){
+	public ResponseEntity<ApiResponse<List<Slot>>> getAllSlots (){
 		
 		return turfService.getAllSlots();
 	}
 	
 	@PostMapping("slots")
-	public ResponseEntity<String> addSlots (@RequestBody List<Slot> slots){
+	public ResponseEntity<ApiResponse<String>> addSlots (@RequestBody List<Slot> slots){
 		
 		return turfService.addSlots(slots);
 		

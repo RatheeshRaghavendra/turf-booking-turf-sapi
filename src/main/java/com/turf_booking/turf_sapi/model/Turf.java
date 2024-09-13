@@ -23,12 +23,12 @@ public class Turf {
 	String sports;
 	
 	@ElementCollection
-	List<Integer> availableSlotIds;
+	List<Integer> bookedSlotIds;
 	
 	Integer pricePerHour;
 	
 	public Turf(Integer turfId, String name, String city, String area, String address, String sports,
-			List<Integer> availableSlotIds, Integer pricePerHour) {
+			List<Integer> bookedSlotIds, Integer pricePerHour) {
 		super();
 		this.turfId = turfId;
 		this.name = name;
@@ -36,7 +36,7 @@ public class Turf {
 		this.area = area;
 		this.address = address;
 		this.sports = sports;
-		this.availableSlotIds = availableSlotIds;
+		this.bookedSlotIds = bookedSlotIds;
 		this.pricePerHour = pricePerHour;
 	}
 
