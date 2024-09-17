@@ -2,11 +2,9 @@ package com.turf_booking.turf_sapi.model;
 
 import java.util.List;
 
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
@@ -21,14 +19,17 @@ public class Turf {
 	String area;
 	String address;
 	String sports;
-	
-	@ElementCollection
-	List<Integer> bookedSlotIds;
+
+//	@Pattern(regexp = "\\d{2}-\\d{2}-\\d{4}\\$\\d{1,2}((am)|(pm))-\\d{1,2}((am)|(pm))", message = "bookedSlotIds should be of the pattern '01-01-1999$5am-6am'")
+//	@Valid
+//	@ManyToMany(cascade = CascadeType.)
+	List<@Pattern(regexp = "\\d{2}-\\d{2}-\\d{4}\\$\\d{1,2}((am)|(pm))-\\d{1,2}((am)|(pm))", message = "bookedSlotIds should be of the pattern '01-01-1999$5am-6am'")
+			String> bookedSlotIds;
 	
 	Integer pricePerHour;
 	
 	public Turf(Integer turfId, String name, String city, String area, String address, String sports,
-			List<Integer> bookedSlotIds, Integer pricePerHour) {
+			List<String> bookedSlotIds, Integer pricePerHour) {
 		super();
 		this.turfId = turfId;
 		this.name = name;

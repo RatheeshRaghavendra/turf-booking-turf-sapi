@@ -3,6 +3,8 @@ package com.turf_booking.turf_sapi.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.turf_booking.turf_sapi.error.AlreadyExists;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,8 @@ import com.turf_booking.turf_sapi.model.Slot;
 import com.turf_booking.turf_sapi.model.Turf;
 
 import jakarta.ws.rs.NotFoundException;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
+
 
 @Service
 public class TurfService {
@@ -134,10 +138,25 @@ public class TurfService {
 		String customError = "";
 		
 		try {
+
+			if((turfDao.findIfTurfExists(
+					turf.getName(),
+					turf.getCity(),
+					turf.getArea(),
+					turf.getAddress(),
+					turf.getSports())) != null){
+
+
+				throw new AlreadyExists("Turf already exists");
+
+			}
+
 			Turf turfResponse =  turfDao.save(turf);
 			apiResponse.setPayload("The Turf was successfully added. Here is the Turf ID: " + turfResponse.getTurfId());
 			apiResponse.setStatusCode(201);
 			
+		} catch (HandlerMethodValidationException e){
+			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
 			
@@ -152,7 +171,7 @@ public class TurfService {
 		return new ResponseEntity<>(apiResponse,apiResponse.getStatusMessage());
 	}
 	
-	public ResponseEntity<ApiResponse<String>> bookTurf(Integer turfId, List<Integer> slotIds) {
+	public ResponseEntity<ApiResponse<String>> bookTurf(Integer turfId, List<String> slotIds) {
 		
 		ApiResponse<String> apiResponse = new ApiResponse<>();
 		ApiError apiError = new ApiError();
@@ -164,13 +183,13 @@ public class TurfService {
 				
 				Turf turf = turfDao.findById(turfId).get();
 				
-				List<Integer> newSlotIds = turf.getBookedSlotIds();
+				List<String> newSlotIds = turf.getBookedSlotIds();
 				newSlotIds.addAll(slotIds);
 				turf.setBookedSlotIds(newSlotIds);
 				
 				turfDao.save(turf);
 				
-				apiResponse.setPayload("The slot was booked for the Turf ID: " + turfId);
+				apiResponse.setPayload("The slotList was booked for the Turf ID: " + turfId);
 			
 			}
 			else {
@@ -204,7 +223,7 @@ public class TurfService {
 		return new ResponseEntity<>(apiResponse,apiResponse.getStatusMessage());
 	}
 	
-	public ResponseEntity<ApiResponse<String>> cancelTurf(Integer turfId, List<Integer> slotIds) {
+	public ResponseEntity<ApiResponse<String>> cancelTurf(Integer turfId, List<String> slotIds) {
 		
 		ApiResponse<String> apiResponse = new ApiResponse<>();
 		ApiError apiError = new ApiError();
@@ -216,7 +235,7 @@ public class TurfService {
 				
 				Turf turf = turfDao.findById(turfId).get();
 				
-				List<Integer> newSlotIds = turf.getBookedSlotIds();
+				List<String> newSlotIds = turf.getBookedSlotIds();
 				newSlotIds.removeAll(slotIds);
 				turf.setBookedSlotIds(newSlotIds);
 				
@@ -256,7 +275,7 @@ public class TurfService {
 		return new ResponseEntity<>(apiResponse,apiResponse.getStatusMessage());
 	}
 
-	public ResponseEntity<ApiResponse<List<Slot>>> getSlots(List<Integer> slots) {
+	public ResponseEntity<ApiResponse<List<Slot>>> getSlots(List<String> slots) {
 		
 		ApiResponse<List<Slot>> apiResponse = new ApiResponse<>();
 		ApiError apiError = new ApiError();
@@ -266,9 +285,9 @@ public class TurfService {
 			
 			Boolean raiseError = false;
 			
-			List<Integer> slotIdsNotAvaialble = new ArrayList<>();
+			List<String> slotIdsNotAvaialble = new ArrayList<>();
 			
-			for(Integer slotId: slots) {
+			for(String slotId: slots) {
 				
 				if(!slotDao.existsById(slotId)) {
 					raiseError = true;
@@ -291,7 +310,7 @@ public class TurfService {
 			
 			e.printStackTrace();
 			
-			customError = "Partial Success while fetching the slot details";
+			customError = "Partial Success while fetching the slotList details";
 			
 			apiError.setApiErrorDetails(e, customError);
 			
@@ -356,11 +375,28 @@ public class TurfService {
 		String customError = "";
 		
 		try {
-			slotDao.saveAll(slots);
+			List<Slot> slotList = new ArrayList<>();
+
+			for(Slot slot: slots){
+//				Slot slotList = new Slot();
+				slot.setSlotId();
+			}
+
+			slotDao.saveAll(slotList);
 			
 			apiResponse.setPayload("Success. The Slots were created Successfully");
 			apiResponse.setStatusCode(201);
 			
+		} catch (ValidationException e) {
+
+			e.printStackTrace();
+
+			customError = "Error while creating the slots";
+			apiError.setApiErrorDetails(e, customError);
+
+			apiResponse.setApiError(apiError);
+			apiResponse.setStatusCode(500);
+
 		} catch (Exception e) {
 			
 			e.printStackTrace();
@@ -370,12 +406,12 @@ public class TurfService {
 			
 			apiResponse.setApiError(apiError);
 			apiResponse.setStatusCode(500);
+
+			System.out.println(e.getCause().toString());
 			
 		}
 		
 		return new ResponseEntity<>(apiResponse,apiResponse.getStatusMessage());
 	}
-
-	
 
 }

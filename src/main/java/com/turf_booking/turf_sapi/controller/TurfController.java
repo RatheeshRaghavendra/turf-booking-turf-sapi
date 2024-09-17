@@ -2,6 +2,7 @@ package com.turf_booking.turf_sapi.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +20,7 @@ import com.turf_booking.turf_sapi.model.ApiResponse;
 import com.turf_booking.turf_sapi.model.Slot;
 import com.turf_booking.turf_sapi.model.Turf;
 import com.turf_booking.turf_sapi.service.TurfService;
+
 
 @RestController
 @RequestMapping("api/turf-sapi")
@@ -53,25 +55,25 @@ public class TurfController {
 
 	
 	@PostMapping("turf")
-	public ResponseEntity<ApiResponse<String>> addTurf (@RequestBody Turf turf){
+	public ResponseEntity<ApiResponse<String>> addTurf (@Valid @RequestBody Turf turf){
 		
 		return turfService.addTurf(turf);		
 	}
 	
 	@PatchMapping("turf/book/{turfId}")
-	public ResponseEntity<ApiResponse<String>> bookTurf (@PathVariable Integer turfId,@RequestParam List<Integer> slotIds){
+	public ResponseEntity<ApiResponse<String>> bookTurf (@PathVariable Integer turfId,@RequestParam List<String> slotIds){
 		
 		return turfService.bookTurf(turfId, slotIds);
 	}
 	
 	@DeleteMapping("turf/cancel/{turfId}")
-	public ResponseEntity<ApiResponse<String>> cancelTurf (@PathVariable Integer turfId,@RequestParam List<Integer> slotIds){
+	public ResponseEntity<ApiResponse<String>> cancelTurf (@PathVariable Integer turfId,@RequestParam List<String> slotIds){
 		
 		return turfService.cancelTurf(turfId, slotIds);
 	}
 	
 	@GetMapping("slots")
-	public ResponseEntity<ApiResponse<List<Slot>>> getSlots (@RequestParam List<Integer> slots){
+	public ResponseEntity<ApiResponse<List<Slot>>> getSlots (@RequestParam List<String> slots){
 		
 		return turfService.getSlots(slots);
 	}
@@ -83,7 +85,7 @@ public class TurfController {
 	}
 	
 	@PostMapping("slots")
-	public ResponseEntity<ApiResponse<String>> addSlots (@RequestBody List<Slot> slots){
+	public ResponseEntity<ApiResponse<String>> addSlots (@Valid @RequestBody List<Slot> slots){
 		
 		return turfService.addSlots(slots);
 		
