@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,8 +60,8 @@ public class TurfController {
 		return turfService.addTurf(turf);		
 	}
 	
-	@PatchMapping("turf/book/{turfId}")
-	public ResponseEntity<ApiResponse<String>> bookTurf (@PathVariable Integer turfId,@RequestParam List<String> slotIds){
+	@PutMapping("turf/book/{turfId}")
+	public ResponseEntity<ApiResponse<String>> bookTurf (@PathVariable Integer turfId,@RequestBody List<String> slotIds){
 		
 		return turfService.bookTurf(turfId, slotIds);
 	}
