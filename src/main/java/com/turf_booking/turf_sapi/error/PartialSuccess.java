@@ -1,13 +1,11 @@
 package com.turf_booking.turf_sapi.error;
 
-public class PartialSuccess extends RuntimeException{
-
-	public PartialSuccess() {
-		super();
-	}
-
+public class PartialSuccess extends CustomTurfException{
 	public PartialSuccess(String message) {
 		super(message);
+	}
+	public PartialSuccess(Exception exception, String message) {
+		super(exception, message);
 	}
 	
 	
