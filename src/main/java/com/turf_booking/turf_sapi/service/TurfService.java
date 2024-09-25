@@ -8,9 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import com.turf_booking.turf_sapi.dao.SlotDao;
 import com.turf_booking.turf_sapi.dao.TurfDao;
-import com.turf_booking.turf_sapi.model.ApiError;
 import com.turf_booking.turf_sapi.model.ApiResponse;
 import com.turf_booking.turf_sapi.model.Turf;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
@@ -20,14 +18,11 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 @Log4j2
 public class TurfService {
 
-	private final String prefix = GlobalLog.prefix + getClass().getSimpleName() + "::"; // appName + "::" +
+	private final String prefix = GlobalLog.prefix + getClass().getSimpleName() + "::";
 	
 	@Autowired
 	TurfDao turfDao;
-	
-//	@Autowired
-//	SlotDao slotDao;
-	
+
 	public ResponseEntity<ApiResponse<Turf>> getTurfById(Integer turfId) {
 
 		ApiResponse<Turf> apiResponse = new ApiResponse<>();

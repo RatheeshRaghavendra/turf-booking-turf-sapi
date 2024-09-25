@@ -3,7 +3,6 @@ package com.turf_booking.turf_sapi.controller;
 import java.util.List;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -68,25 +67,4 @@ public class TurfController {
 					String> slotIds){
 		return turfService.cancelTurf(turfId, slotIds);
 	}
-/*
-	
-	@GetMapping("slots")
-	public ResponseEntity<ApiResponse<List<Slot>>> getSlots (@RequestParam List<String> slots){
-		
-		return turfService.getSlots(slots);
-	}
-	
-	@GetMapping("slots/all")
-	public ResponseEntity<ApiResponse<List<Slot>>> getAllSlots (){
-		
-		return turfService.getAllSlots();
-	}
-	
-	@PostMapping("slots")
-	public ResponseEntity<ApiResponse<String>> addSlots (@Valid @RequestBody List<Slot> slots){
-		
-		return turfService.addSlots(slots);
-		
-	}
-*/
 }

@@ -3,7 +3,6 @@ package com.turf_booking.turf_sapi.model;
 import java.util.List;
 
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
@@ -19,10 +18,6 @@ public class Turf {
 	String area;
 	String address;
 	String sports;
-
-//	@Pattern(regexp = "\\d{2}-\\d{2}-\\d{4}\\$\\d{1,2}((am)|(pm))-\\d{1,2}((am)|(pm))", message = "bookedSlotIds should be of the pattern '01-01-1999$5am-6am'")
-//	@Valid
-//	@ManyToMany(cascade = CascadeType.)
 	List<@Pattern(regexp = "\\d{2}-\\d{2}-\\d{4}\\$\\d{1,2}((am)|(pm))-\\d{1,2}((am)|(pm))", message = "bookedSlotIds should be of the pattern '01-01-1999$5am-6am'")
 			String> bookedSlotIds;
 	
